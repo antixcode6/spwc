@@ -13,6 +13,7 @@ type File struct {
 	Description string `json:"description"`
 }
 
+// TODO: Merge json
 func Insert(password string, description string) error {
 	homePath, err := os.UserHomeDir()
 	if err != nil {
