@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	directory string = ".spwc"
-	file      string = ".cache"
+	Directory string = ".spwc"
+	File      string = ".cache"
 )
 
 // SetPath acts as an entry point for the init command; it creates the directory and file for spwc
@@ -16,12 +16,12 @@ func SetPath() error {
 	if err != nil {
 		log.Fatalf("Could not create directory: %v", err)
 	}
-	path := homePath + `/` + directory
+	path := homePath + `/` + Directory
 	err = createDir(path)
 	if err != nil {
 		return err
 	}
-	dir := path + `/` + file
+	dir := path + `/` + File
 	log.Println(dir)
 	err = createFile(dir)
 	if err != nil {
