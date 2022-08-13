@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// CLI stuff
+// CLI stuff.
 func main() {
 	app := &cli.App{
 		Commands: []*cli.Command{
@@ -29,7 +29,11 @@ func main() {
 				Name:  "ls",
 				Usage: "Lists passwords",
 				Action: func(c *cli.Context) error {
-					crypt.Ls()
+					err := crypt.Ls()
+					if err != nil {
+						log.Fatalf("Unable to list password: %v", err)
+						return err
+					}
 					return nil
 				},
 			},

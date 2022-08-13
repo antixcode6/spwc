@@ -9,6 +9,7 @@ import (
 	config "github.com/antixcode6/spwc/pkg"
 )
 
+// File is used to pass pass to the receiver functions to handle encryption and decryption of user passwords.
 type File struct {
 	Password    string `json:"password"`
 	Description string `json:"description"`
@@ -16,8 +17,8 @@ type File struct {
 	Method      string
 }
 
-// TODO: Merge json
-func Insert(password string, description string) error {
+// Insert takes a user password and description input, encrypts it, and stores it in .cache.
+func Insert(password string, description string) error { // TODO: Merge json.
 	homePath, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -43,7 +44,7 @@ func Insert(password string, description string) error {
 		return err
 	}
 
-	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,6 +61,7 @@ func readFile(file string) []byte {
 	return f
 }
 
+// Ls prompts a user for a password, reads the .cache file, unmarshals it, and returns the password(s).
 func Ls() error {
 	var data File
 	homePath, err := os.UserHomeDir()
