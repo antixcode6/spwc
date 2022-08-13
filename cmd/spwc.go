@@ -29,7 +29,7 @@ func main() {
 				Name:  "ls",
 				Usage: "Lists passwords",
 				Action: func(c *cli.Context) error {
-
+					crypt.Ls()
 					return nil
 				},
 			},

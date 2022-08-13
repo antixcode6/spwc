@@ -2,6 +2,7 @@ package crypt
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -11,6 +12,8 @@ import (
 type File struct {
 	Password    string `json:"password"`
 	Description string `json:"description"`
+	CypherText  string
+	Method      string
 }
 
 // TODO: Merge json
@@ -23,8 +26,19 @@ func Insert(password string, description string) error {
 	resp := &File{
 		Password:    password,
 		Description: description,
+		Method:      "Insert",
 	}
-	b, err := json.Marshal(resp)
+	cryptPwd, err := resp.Auth()
+	if err != nil {
+		return err
+	}
+
+	CryptedResp := &File{
+		Password:    cryptPwd,
+		Description: description,
+	}
+
+	b, err := json.Marshal(CryptedResp)
 	if err != nil {
 		return err
 	}
@@ -44,4 +58,29 @@ func Insert(password string, description string) error {
 func readFile(file string) []byte {
 	f, _ := os.ReadFile(file)
 	return f
+}
+
+func Ls() error {
+	var data File
+	homePath, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	file := homePath + `/` + config.Directory + `/` + config.File
+
+	inFile := readFile(file)
+	err = json.Unmarshal(inFile, &data)
+	if err != nil {
+		log.Printf("Unable to unmarshal json: %v", err)
+	}
+	resp := File{
+		CypherText: data.Password,
+		Method:     "Ls",
+	}
+	unCryptPwd, err := resp.Auth()
+	if err != nil {
+		return err
+	}
+	fmt.Println("\n" + unCryptPwd)
+	return nil
 }
